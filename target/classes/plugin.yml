@@ -1,0 +1,5 @@
+name: HLogin
+main: com.hghgthifg.HLogin.Main
+version: 0.1
+author: hghgthifg
+description: HLogin简易登录插件

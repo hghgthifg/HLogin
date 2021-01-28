@@ -1,0 +1,18 @@
+name: HLogin
+main: com.hghgthifg.HLogin.Main
+version: 0.1
+author: hghgthifg
+description: HLogin简易登录插件
+commands:
+  login:
+    description: 登录
+    usage: /login <密码>
+    aliases:
+      - log
+      - l
+  register:
+    description: 注册
+    usage: /register <密码> <确认密码>
+    aliases:
+      - reg
+      - r
