@@ -1,5 +1,8 @@
 package com.hghgthifg.HLogin;
 
+import com.hghgthifg.HLogin.command.login.LoginCommand;
+import com.hghgthifg.HLogin.command.register.RegisterCommand;
+import com.hghgthifg.HLogin.event.LoginEvent;
 import org.bukkit.Bukkit;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +35,15 @@ public class Main extends JavaPlugin{
         }
         config = getConfig();
 
+        //注册命令
+        Bukkit.getPluginCommand("login").setExecutor(new LoginCommand());
+        getLogger().info("Command login loaded");
+        Bukkit.getPluginCommand("register").setExecutor(new RegisterCommand());
+        getLogger().info("Command register loaded");
+
+        //注册监听器
+        Bukkit.getPluginManager().registerEvents(new LoginEvent(),this);
+        getLogger().info("Listener login loaded");
     }
 
 }

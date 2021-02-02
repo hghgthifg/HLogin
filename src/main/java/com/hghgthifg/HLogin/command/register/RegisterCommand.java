@@ -1,14 +1,18 @@
 package com.hghgthifg.HLogin.command.register;
 
-import com.hghgthifg.HLogin.command.PlayerCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class RegisterCommand extends PlayerCommand {
-
+public class RegisterCommand implements CommandExecutor {
     @Override
-    protected void runCommand(Player player, List<String> args) {
-
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (commandSender instanceof Player){
+            Player player = (((Player) commandSender).getPlayer());
+        }else {
+            commandSender.sendMessage("只有玩家可以执行该命令");
+        }
+        return false;
     }
 }
