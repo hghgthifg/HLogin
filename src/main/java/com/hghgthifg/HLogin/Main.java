@@ -8,9 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class Main extends JavaPlugin{
     // 私有实例
     private FileConfiguration config;
+    private File userDataFolder=new File(getDataFolder(),"userdata");
 
     /*
      * 插件关闭时的行为
@@ -31,10 +34,12 @@ public class Main extends JavaPlugin{
         //获取config信息
         if (!getDataFolder().mkdir()) {
             saveDefaultConfig();
+            if (!userDataFolder.mkdir()){
+                getLogger().info("Create userdata folder");
+            }
             reloadConfig();
         }
         config = getConfig();
-
         //注册命令
         Bukkit.getPluginCommand("login").setExecutor(new LoginCommand());
         getLogger().info("Command login loaded");
@@ -42,7 +47,7 @@ public class Main extends JavaPlugin{
         getLogger().info("Command register loaded");
 
         //注册监听器
-        Bukkit.getPluginManager().registerEvents(new LoginEvent(),this);
+        Bukkit.getPluginManager().registerEvents(new LoginEvent(userDataFolder,getLogger()),this);
         getLogger().info("Listener login loaded");
     }
 
