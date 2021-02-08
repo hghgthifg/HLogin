@@ -13,7 +13,7 @@ import java.io.File;
 public class Main extends JavaPlugin{
     // 私有实例
     private FileConfiguration config;
-    private File userDataFolder=new File(getDataFolder(),"userdata");
+    private final File userDataFolder=new File(getDataFolder(),"userdata");
 
     /*
      * 插件关闭时的行为
@@ -29,26 +29,24 @@ public class Main extends JavaPlugin{
     @Override
     public void onEnable(){
         super.onEnable();
-        Bukkit.getConsoleSender().sendMessage("§4HLogin loaded");
-
+        Bukkit.getConsoleSender().sendMessage("§4HLogin已启用");
         //获取config信息
         if (!getDataFolder().mkdir()) {
             saveDefaultConfig();
             if (!userDataFolder.mkdir()){
-                getLogger().info("Create userdata folder");
+                getLogger().info("创建了用户数据目录");
             }
             reloadConfig();
         }
         config = getConfig();
         //注册命令
-        Bukkit.getPluginCommand("login").setExecutor(new LoginCommand());
-        getLogger().info("Command login loaded");
-        Bukkit.getPluginCommand("register").setExecutor(new RegisterCommand());
-        getLogger().info("Command register loaded");
+        Bukkit.getPluginCommand("login").setExecutor(new LoginCommand(userDataFolder,getLogger()));
+        Bukkit.getPluginCommand("register").setExecutor(new RegisterCommand(userDataFolder,getLogger()));
+        getLogger().info("指令加载完成");
 
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new LoginEvent(userDataFolder,getLogger()),this);
-        getLogger().info("Listener login loaded");
+        getLogger().info("监听器加载完成");
     }
 
 }

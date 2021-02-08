@@ -7,31 +7,38 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Logger;
+
+import static org.bukkit.GameMode.SPECTATOR;
 
 public final class LoginEvent implements Listener {
     private final File userDataFolder;
     private final Logger logger;
     private File userData;
 
-    public LoginEvent(File Folder,Logger logger){
-        this.userDataFolder=Folder;
+    public LoginEvent(File folder,Logger logger){
+        this.userDataFolder=folder;
         this.logger=logger;
     }
 
     @EventHandler
     public void onLogin(PlayerJoinEvent event) {
-        userData=new File(userDataFolder,event.getPlayer().getUniqueId().toString());
-        if (!userData.exists()){
-            try {
-                if (userData.createNewFile()){
-                    logger.info("为"+event.getPlayer().getName()+"创建了数据文件");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        Player player=event.getPlayer();
+        userData=new File(userDataFolder,player.getUniqueId().toString());
+        if (!userData.exists()) {
+            player.sendMessage("请使用/reg <密码> <确认密码> 注册");
         }
-        event.getPlayer().sendMessage("Hello "+event.getPlayer().getName()+"!");
+        else {
+            player.sendMessage("请使用/log <密码> 登录");
+        }
+    }
+
+    private void setStatus(Player player)
+    {
+        player.setAllowFlight(false);
+        player.setCanPickupItems(false);
+        player.setCollidable(false);
+        player.setGameMode(SPECTATOR);
+        //player.setWalkSpeed(0);
     }
 }
