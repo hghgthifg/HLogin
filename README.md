@@ -1,6 +1,3 @@
-Minecraft服务端简易登录插件（暂未完成）
+Minecraft Spigot服务端简易登录插件
 
-## 环境要求
->- JDK 1.8
->- Maven
->- IntelliJ IDEA
+仅1.12.2版本经过测试

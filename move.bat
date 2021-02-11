@@ -1,1 +1,0 @@
-copy .\out\artifacts\HLogin\HLogin.jar ..\Server\Plugins\HLogin.jar /Y
