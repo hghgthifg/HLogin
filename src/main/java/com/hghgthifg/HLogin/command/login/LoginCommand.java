@@ -9,17 +9,20 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class LoginCommand implements CommandExecutor {
     private final File userDataFolder;
     private final Logger logger;
+    private final HashMap<String,Boolean> userLoginState;
 
-    public LoginCommand(File folder,Logger logger)
+    public LoginCommand(File folder, Logger logger, HashMap<String,Boolean> state)
     {
         this.userDataFolder=folder;
         this.logger=logger;
+        this.userLoginState=state;
     }
 
     @Override
@@ -30,8 +33,14 @@ public class LoginCommand implements CommandExecutor {
                 return false;
             }
             Player player = (((Player) commandSender).getPlayer());
+
             File userData = new File(userDataFolder, player.getUniqueId().toString());
             try {
+                if (userLoginState.get(player.getUniqueId().toString()))
+                {
+                    commandSender.sendMessage("已经登录");
+                    return true;
+                }
                 //判断是否注册
                 if (userData.exists()) {
                     //将输入加密
@@ -59,7 +68,8 @@ public class LoginCommand implements CommandExecutor {
                     if (Objects.equals(result.toString(), r))
                     {
                         logger.info(player.getName()+"登录成功");
-                        commandSender.sendMessage("Hello , "+player.getName()+'.');
+                        commandSender.sendMessage("Hello,"+player.getName()+'.');
+                        userLoginState.put(player.getUniqueId().toString(),true);
                         return true;
                     }else{
                         logger.info(player.getName()+"输入了错误的密码");
@@ -69,6 +79,7 @@ public class LoginCommand implements CommandExecutor {
                 }else
                 {
                     commandSender.sendMessage("请先注册");
+                    return true;
                 }
             } catch (IOException e)
             {

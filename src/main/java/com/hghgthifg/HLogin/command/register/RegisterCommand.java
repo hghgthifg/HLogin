@@ -3,6 +3,8 @@ package com.hghgthifg.HLogin.command.register;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -12,20 +14,23 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class RegisterCommand implements CommandExecutor {
     private final File userDataFolder;
     private final Logger logger;
+    private final HashMap<String,Boolean> userLoginState;
 
     /*
      * 构造函数
      */
-    public RegisterCommand(File folder,Logger logger)
+    public RegisterCommand(File folder, Logger logger, HashMap<String,Boolean> state)
     {
         this.userDataFolder=folder;
         this.logger=logger;
+        this.userLoginState=state;
     }
 
     /*
@@ -48,7 +53,8 @@ public class RegisterCommand implements CommandExecutor {
             Player player = (((Player) commandSender).getPlayer());
             File userData = new File(userDataFolder, player.getUniqueId().toString());
             try {
-                if (userData.createNewFile()) {
+                if (!userData.exists()) {
+                    userData.createNewFile();
                     logger.info("为" + player.getName() + "创建了数据文件");
 
                     //将密码加密
@@ -71,6 +77,11 @@ public class RegisterCommand implements CommandExecutor {
                     f.write(result.toString().getBytes(StandardCharsets.UTF_8));
                     f.close();
 
+                    userLoginState.put(player.getUniqueId().toString(),true);
+                    return true;
+                }else
+                {
+                    commandSender.sendMessage("已经注册");
                     return true;
                 }
             } catch (IOException e) {
